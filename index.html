@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Andrew & Evelyn | Wedding Celebration</title>
+    <meta
+      name="description"
+      content="A cinematic wedding invitation for Andrew Grove Koeswanto and Evelyn Hariono in Sydney, Australia."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="intro-locked">
+    <div class="star-layer" id="starLayer" aria-hidden="true"></div>
+    <div class="envelope-intro" id="envelopeIntro" aria-label="Invitation envelope opening animation">
+      <div class="envelope-stage" id="envelopeStage">
+        <div class="envelope" aria-hidden="true">
+          <div class="envelope-back"></div>
+          <div class="envelope-front-text">
+            <p class="from-label">From:</p>
+            <p class="from-names" id="fromNames" data-full-text="Andrew & Evelyn"></p>
+          </div>
+          <div class="envelope-light"></div>
+          <div class="envelope-letter"></div>
+          <div class="envelope-flap"></div>
+          <button class="wax-seal" id="waxSeal" type="button" aria-label="Open invitation">
+            Open
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <header class="hero" id="top">
+      <div class="hero-media" aria-hidden="true">
+        <img src="assets/photo-portrait.jpg" alt="" />
+      </div>
+      <div class="hero-overlay" aria-hidden="true"></div>
+
+      <div class="hero-content reveal show">
+        <p class="hero-kicker">The Wedding Of</p>
+        <h1>Andrew Grove Koeswanto <span>&</span> Evelyn Hariono</h1>
+        <p class="hero-subtitle">Sydney, Australia</p>
+        <a class="hero-link" href="#journey">Begin Our Story</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="section section-journey" id="journey">
+        <div class="container journey-layout">
+          <article class="journey-copy reveal">
+            <p class="section-label">Our Journey</p>
+            <h2>Quiet moments, enduring love, and a celebration in Sydney</h2>
+            <p>
+              With gratitude and joy, we invite you to witness the beginning of our married life. This celebration is
+              shaped by intimacy, nature, and the people we cherish most.
+            </p>
+          </article>
+
+          <aside class="journey-stack">
+            <figure class="photo-card photo-large reveal parallax" data-speed="0.1">
+              <img src="assets/photo-embrace.jpg" alt="Andrew and Evelyn embracing by the lake" />
+            </figure>
+            <figure class="photo-card photo-small reveal parallax" data-speed="0.07">
+              <img src="assets/photo-walk.jpg" alt="Andrew and Evelyn walking across the rocks" />
+            </figure>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section section-opera" id="opera-moment">
+        <div class="opera-frame parallax" data-speed="0.08" aria-hidden="true">
+          <div class="opera-backdrop"></div>
+          <svg class="opera-line" viewBox="0 0 1200 420" role="img" aria-label="Sydney Opera House silhouette">
+            <g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M130 325 H1060" />
+              <path d="M265 325 Q350 142 470 325 Z" />
+              <path d="M410 325 Q520 118 640 325 Z" />
+              <path d="M575 325 Q690 137 820 325 Z" />
+              <path d="M735 325 Q820 194 915 325 Z" />
+            </g>
+          </svg>
+          <img src="assets/photo-night-proposal.jpg" alt="" class="opera-photo" />
+        </div>
+
+        <div class="container reveal opera-copy">
+          <p class="section-label">Sydney Moment</p>
+          <h2>The Sydney Opera House, where our celebration comes alive</h2>
+        </div>
+      </section>
+
+      <section class="section section-events" id="events">
+        <div class="container reveal">
+          <p class="section-label">Event Schedule</p>
+          <h2>Wedding Week</h2>
+
+          <div class="timeline">
+            <article class="timeline-item reveal">
+              <p class="date">October 19, 2026</p>
+              <h3>Welcome Dinner</h3>
+            </article>
+
+            <article class="timeline-item reveal">
+              <p class="date">October 20, 2026</p>
+              <h3>Holy Matrimony</h3>
+              <p>3:00 PM to 4:00 PM</p>
+              <p>St Mary’s Cathedral</p>
+            </article>
+
+            <article class="timeline-item reveal">
+              <p class="date">October 20, 2026</p>
+              <h3>Reception</h3>
+              <p>6:30 PM onwards</p>
+              <p>Bennelong, Sydney Opera House</p>
+            </article>
+
+            <article class="timeline-item reveal">
+              <p class="date">October 21, 2026</p>
+              <h3>Farewell Lunch</h3>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-rsvp" id="rsvp">
+        <div class="container narrow reveal rsvp-panel">
+          <p class="section-label">RSVP</p>
+          <h2>We Would Be Honored By Your Presence</h2>
+
+          <form class="rsvp-form" id="rsvpForm" novalidate>
+            <label>
+              Full Name
+              <input type="text" name="name" required />
+            </label>
+
+            <label>
+              Attendance
+              <select name="attendance" required>
+                <option value="">Select your response</option>
+                <option value="yes">Joyfully Attending</option>
+                <option value="no">Unable To Attend</option>
+              </select>
+            </label>
+
+            <label>
+              Number of Guests
+              <input type="number" name="guests" min="1" max="6" value="1" />
+            </label>
+
+            <label>
+              Message
+              <textarea name="message" rows="4" placeholder="Share your wishes..."></textarea>
+            </label>
+
+            <button type="submit">Send RSVP</button>
+            <p id="rsvpNote" class="form-note" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>With love, Andrew & Evelyn</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
