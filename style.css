@@ -97,9 +97,13 @@ h3,
   font-weight: 600;
 }
 
-.hero h1 span {
+.hero h1 .amp {
   color: var(--accent);
   font-weight: 500;
+}
+
+.hero h1 .no-break {
+  white-space: nowrap;
 }
 
 .hero-subtitle {
