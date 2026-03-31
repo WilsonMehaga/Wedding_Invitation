@@ -1,18 +1,13 @@
 const revealElements = document.querySelectorAll('.reveal');
 const parallaxElements = document.querySelectorAll('.parallax');
 const hero = document.querySelector('.hero');
-const envelopeIntro = document.getElementById('envelopeIntro');
-const envelopeStage = document.getElementById('envelopeStage');
-const openEnvelope = document.getElementById('openEnvelope');
-const invitePaper = document.getElementById('invitePaper');
-const starLayer = document.getElementById('starLayer');
 const rsvpForm = document.getElementById('rsvpForm');
 const rsvpNote = document.getElementById('rsvpNote');
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function setupReveal() {
-  if (!('IntersectionObserver' in window)) {
+  if (('IntersectionObserver' in window) === false) {
     revealElements.forEach((el) => el.classList.add('show'));
     return;
   }
@@ -20,7 +15,7 @@ function setupReveal() {
   const observer = new IntersectionObserver(
     (entries, obs) => {
       entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
+        if (entry.isIntersecting === false) return;
         entry.target.classList.add('show');
         obs.unobserve(entry.target);
       });
@@ -44,7 +39,7 @@ function setupParallax() {
     const viewportH = window.innerHeight;
 
     parallaxElements.forEach((el) => {
-      const speed = Number(el.dataset.speed || 0.08);
+      const speed = Number(el.dataset.speed || 0.05);
       const rect = el.getBoundingClientRect();
       const centerOffset = rect.top + rect.height / 2 - viewportH / 2;
       const translateY = centerOffset * -speed;
@@ -64,7 +59,7 @@ function setupParallax() {
 }
 
 function setupHeroScrollMotion() {
-  if (!hero || prefersReducedMotion) return;
+  if (hero === null || prefersReducedMotion) return;
 
   let ticking = false;
 
@@ -73,11 +68,11 @@ function setupHeroScrollMotion() {
     const heroHeight = Math.max(hero.offsetHeight, 1);
     const progress = Math.min(1, Math.max(0, window.scrollY / heroHeight));
 
-    hero.style.setProperty('--hero-shift', (progress * 92).toFixed(2) + 'px');
-    hero.style.setProperty('--hero-scale', (1 + progress * 0.12).toFixed(3));
-    hero.style.setProperty('--hero-content-shift', (progress * 48).toFixed(2) + 'px');
-    hero.style.setProperty('--hero-content-opacity', (1 - progress * 1.24).toFixed(3));
-    hero.style.setProperty('--hero-overlay-opacity', (1 - progress * 0.18).toFixed(3));
+    hero.style.setProperty('--hero-shift', (progress * 68).toFixed(2) + 'px');
+    hero.style.setProperty('--hero-scale', (1 + progress * 0.08).toFixed(3));
+    hero.style.setProperty('--hero-content-shift', (progress * 34).toFixed(2) + 'px');
+    hero.style.setProperty('--hero-content-opacity', (1 - progress * 1.14).toFixed(3));
+    hero.style.setProperty('--hero-overlay-opacity', (1 - progress * 0.2).toFixed(3));
   };
 
   const onScroll = () => {
@@ -92,12 +87,12 @@ function setupHeroScrollMotion() {
 }
 
 function setupRsvp() {
-  if (!rsvpForm || !rsvpNote) return;
+  if (rsvpForm === null || rsvpNote === null) return;
 
   rsvpForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    if (!rsvpForm.checkValidity()) {
+    if (rsvpForm.checkValidity() === false) {
       rsvpNote.textContent = 'Please complete the required fields before submitting.';
       return;
     }
@@ -116,145 +111,6 @@ function setupRsvp() {
   });
 }
 
-function setupEnvelopeIntro() {
-  if (!envelopeIntro || !envelopeStage || !invitePaper || !openEnvelope) {
-    document.body.classList.remove('intro-locked');
-    return;
-  }
-
-  let isOpening = false;
-  let dragging = false;
-  let pointerStartY = 0;
-  let pullAmount = 0;
-  let wheelPull = 0;
-
-  const applyPull = (pixels) => {
-    pullAmount = Math.max(0, Math.min(170, pixels));
-    const progress = pullAmount / 170;
-    openEnvelope.style.setProperty('--paper-pull', pullAmount.toFixed(1) + 'px');
-    openEnvelope.style.setProperty('--paper-progress', progress.toFixed(3));
-  };
-
-  const releasePull = () => {
-    applyPull(0);
-    wheelPull = 0;
-  };
-
-  const finishIntro = () => {
-    if (envelopeStage.classList.contains('opening')) return;
-    if (isOpening) return;
-    isOpening = true;
-
-    envelopeStage.classList.add('opening');
-    triggerStarBurst(invitePaper);
-
-    window.setTimeout(() => {
-      envelopeIntro.classList.add('boom');
-      envelopeStage.classList.add('boom');
-    }, 980);
-
-    window.setTimeout(() => {
-      envelopeIntro.classList.add('done');
-      document.body.classList.remove('intro-locked');
-    }, 1550);
-  };
-
-  const onStart = (event) => {
-    if (isOpening) return;
-    dragging = true;
-    openEnvelope.classList.add('dragging');
-    invitePaper.classList.add('dragging');
-    pointerStartY = event.clientY;
-    openEnvelope.setPointerCapture(event.pointerId);
-  };
-
-  const onMove = (event) => {
-    if (!dragging || isOpening) return;
-    const deltaY = pointerStartY - event.clientY;
-    applyPull(deltaY);
-  };
-
-  const onEnd = (event) => {
-    if (!dragging || isOpening) return;
-    dragging = false;
-    openEnvelope.classList.remove('dragging');
-    invitePaper.classList.remove('dragging');
-    openEnvelope.releasePointerCapture(event.pointerId);
-    if (pullAmount > 92) {
-      finishIntro();
-    } else {
-      releasePull();
-    }
-  };
-
-  const onCancel = () => {
-    dragging = false;
-    openEnvelope.classList.remove('dragging');
-    invitePaper.classList.remove('dragging');
-    if (!isOpening) releasePull();
-  };
-
-  openEnvelope.addEventListener('pointerdown', onStart);
-  openEnvelope.addEventListener('pointermove', onMove);
-  openEnvelope.addEventListener('pointerup', onEnd);
-  openEnvelope.addEventListener('pointercancel', onCancel);
-
-  invitePaper.addEventListener(
-    'wheel',
-    (event) => {
-      if (isOpening) return;
-      if (event.deltaY < 0) {
-        event.preventDefault();
-        wheelPull += Math.abs(event.deltaY) * 0.25;
-        applyPull(wheelPull);
-        if (wheelPull > 92) {
-          finishIntro();
-        }
-      }
-    },
-    { passive: false }
-  );
-
-  invitePaper.addEventListener('click', () => {
-    if (isOpening) return;
-    if (pullAmount > 36) {
-      finishIntro();
-    }
-  });
-}
-
-function spawnGoldStar(x, y) {
-  if (!starLayer) return;
-  const star = document.createElement('span');
-  star.className = 'gold-star';
-
-  const size = 8 + Math.random() * 8;
-  const driftX = (Math.random() - 0.5) * 220;
-  const driftY = Math.random() * 30;
-
-  star.style.left = x + driftX + 'px';
-  star.style.top = y + driftY + 'px';
-  star.style.width = size + 'px';
-  star.style.height = size + 'px';
-
-  starLayer.appendChild(star);
-  star.addEventListener('animationend', () => star.remove());
-}
-
-function triggerStarBurst(originElement) {
-  if (!originElement) return;
-  const rect = originElement.getBoundingClientRect();
-  const centerX = rect.left + rect.width / 2;
-  const centerY = rect.top + rect.height * 0.28;
-
-  for (let i = 0; i < 48; i += 1) {
-    window.setTimeout(() => {
-      spawnGoldStar(centerX, centerY);
-    }, i * 34);
-  }
-}
-
-setupEnvelopeIntro();
 setupReveal();
 setupParallax();
 setupHeroScrollMotion();
