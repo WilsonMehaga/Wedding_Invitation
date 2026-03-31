@@ -3,9 +3,9 @@ const parallaxElements = document.querySelectorAll('.parallax');
 const hero = document.querySelector('.hero');
 const envelopeIntro = document.getElementById('envelopeIntro');
 const envelopeStage = document.getElementById('envelopeStage');
-const waxSeal = document.getElementById('waxSeal');
+const openEnvelope = document.getElementById('openEnvelope');
+const invitePaper = document.getElementById('invitePaper');
 const starLayer = document.getElementById('starLayer');
-const fromNames = document.getElementById('fromNames');
 const rsvpForm = document.getElementById('rsvpForm');
 const rsvpNote = document.getElementById('rsvpNote');
 
@@ -117,59 +117,110 @@ function setupRsvp() {
 }
 
 function setupEnvelopeIntro() {
-  if (!envelopeIntro || !envelopeStage || !waxSeal) {
+  if (!envelopeIntro || !envelopeStage || !invitePaper || !openEnvelope) {
     document.body.classList.remove('intro-locked');
     return;
   }
 
-  const openEnvelope = () => {
+  let isOpening = false;
+  let dragging = false;
+  let pointerStartY = 0;
+  let pullAmount = 0;
+  let wheelPull = 0;
+
+  const applyPull = (pixels) => {
+    pullAmount = Math.max(0, Math.min(170, pixels));
+    const progress = pullAmount / 170;
+    openEnvelope.style.setProperty('--paper-pull', pullAmount.toFixed(1) + 'px');
+    openEnvelope.style.setProperty('--paper-progress', progress.toFixed(3));
+  };
+
+  const releasePull = () => {
+    applyPull(0);
+    wheelPull = 0;
+  };
+
+  const finishIntro = () => {
     if (envelopeStage.classList.contains('opening')) return;
+    if (isOpening) return;
+    isOpening = true;
 
     envelopeStage.classList.add('opening');
-
-    window.setTimeout(() => {
-      triggerStarBurst();
-    }, 360);
-
-    window.setTimeout(() => {
-      envelopeStage.classList.add('opened');
-    }, 620);
+    triggerStarBurst(invitePaper);
 
     window.setTimeout(() => {
       envelopeIntro.classList.add('boom');
       envelopeStage.classList.add('boom');
-    }, 1080);
+    }, 980);
 
     window.setTimeout(() => {
       envelopeIntro.classList.add('done');
       document.body.classList.remove('intro-locked');
-    }, 1600);
+    }, 1550);
   };
 
-  waxSeal.addEventListener('click', openEnvelope);
-}
+  const onStart = (event) => {
+    if (isOpening) return;
+    dragging = true;
+    openEnvelope.classList.add('dragging');
+    invitePaper.classList.add('dragging');
+    pointerStartY = event.clientY;
+    openEnvelope.setPointerCapture(event.pointerId);
+  };
 
-function setupTypewriterFrom() {
-  if (!fromNames) return;
+  const onMove = (event) => {
+    if (!dragging || isOpening) return;
+    const deltaY = pointerStartY - event.clientY;
+    applyPull(deltaY);
+  };
 
-  const fullText = fromNames.getAttribute('data-full-text') || '';
-  fromNames.textContent = '';
-  fromNames.classList.add('typing');
-
-  let index = 0;
-  const typeNext = () => {
-    if (index > fullText.length) {
-      window.setTimeout(() => {
-        fromNames.classList.remove('typing');
-      }, 400);
-      return;
+  const onEnd = (event) => {
+    if (!dragging || isOpening) return;
+    dragging = false;
+    openEnvelope.classList.remove('dragging');
+    invitePaper.classList.remove('dragging');
+    openEnvelope.releasePointerCapture(event.pointerId);
+    if (pullAmount > 92) {
+      finishIntro();
+    } else {
+      releasePull();
     }
-    fromNames.textContent = fullText.slice(0, index);
-    index += 1;
-    window.setTimeout(typeNext, 80);
   };
 
-  window.setTimeout(typeNext, 320);
+  const onCancel = () => {
+    dragging = false;
+    openEnvelope.classList.remove('dragging');
+    invitePaper.classList.remove('dragging');
+    if (!isOpening) releasePull();
+  };
+
+  openEnvelope.addEventListener('pointerdown', onStart);
+  openEnvelope.addEventListener('pointermove', onMove);
+  openEnvelope.addEventListener('pointerup', onEnd);
+  openEnvelope.addEventListener('pointercancel', onCancel);
+
+  invitePaper.addEventListener(
+    'wheel',
+    (event) => {
+      if (isOpening) return;
+      if (event.deltaY < 0) {
+        event.preventDefault();
+        wheelPull += Math.abs(event.deltaY) * 0.25;
+        applyPull(wheelPull);
+        if (wheelPull > 92) {
+          finishIntro();
+        }
+      }
+    },
+    { passive: false }
+  );
+
+  invitePaper.addEventListener('click', () => {
+    if (isOpening) return;
+    if (pullAmount > 36) {
+      finishIntro();
+    }
+  });
 }
 
 function spawnGoldStar(x, y) {
@@ -190,21 +241,20 @@ function spawnGoldStar(x, y) {
   star.addEventListener('animationend', () => star.remove());
 }
 
-function triggerStarBurst() {
-  if (!waxSeal) return;
-  const rect = waxSeal.getBoundingClientRect();
+function triggerStarBurst(originElement) {
+  if (!originElement) return;
+  const rect = originElement.getBoundingClientRect();
   const centerX = rect.left + rect.width / 2;
-  const centerY = rect.top + rect.height / 2;
+  const centerY = rect.top + rect.height * 0.28;
 
-  for (let i = 0; i < 34; i += 1) {
+  for (let i = 0; i < 48; i += 1) {
     window.setTimeout(() => {
       spawnGoldStar(centerX, centerY);
-    }, i * 42);
+    }, i * 34);
   }
 }
 
 setupEnvelopeIntro();
-setupTypewriterFrom();
 setupReveal();
 setupParallax();
 setupHeroScrollMotion();

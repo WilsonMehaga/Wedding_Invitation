@@ -20,18 +20,14 @@
     <div class="star-layer" id="starLayer" aria-hidden="true"></div>
     <div class="envelope-intro" id="envelopeIntro" aria-label="Invitation envelope opening animation">
       <div class="envelope-stage" id="envelopeStage">
-        <div class="envelope" aria-hidden="true">
-          <div class="envelope-back"></div>
-          <div class="envelope-front-text">
-            <p class="from-label">From:</p>
-            <p class="from-names" id="fromNames" data-full-text="Andrew & Evelyn"></p>
-          </div>
-          <div class="envelope-light"></div>
-          <div class="envelope-letter"></div>
-          <div class="envelope-flap"></div>
-          <button class="wax-seal" id="waxSeal" type="button" aria-label="Open invitation">
-            Open
+        <div class="envelope" id="openEnvelope" aria-hidden="true">
+          <button class="invite-paper" id="invitePaper" type="button" aria-label="Swipe up to open invitation">
+            <span class="save-title">Save the Date</span>
+            <span class="save-date">October 20, 2026</span>
+            <span class="swipe-hint">Swipe up to open</span>
           </button>
+
+          <span class="envelope-swipe-hint">Swipe up</span>
         </div>
       </div>
     </div>
@@ -66,9 +62,6 @@
             <figure class="photo-card photo-large reveal parallax" data-speed="0.1">
               <img src="assets/photo-embrace.jpg" alt="Andrew and Evelyn embracing by the lake" />
             </figure>
-            <figure class="photo-card photo-small reveal parallax" data-speed="0.07">
-              <img src="assets/photo-walk.jpg" alt="Andrew and Evelyn walking across the rocks" />
-            </figure>
           </aside>
         </div>
       </section>
@@ -91,6 +84,45 @@
         <div class="container reveal opera-copy">
           <p class="section-label">Sydney Moment</p>
           <h2>The Sydney Opera House, where our celebration comes alive</h2>
+        </div>
+      </section>
+
+      <section class="section section-memories" id="memories">
+        <div class="container">
+          <article class="memories-copy reveal">
+            <p class="section-label">Memories</p>
+            <h2>Scenes from our quiet, beautiful chapter</h2>
+          </article>
+
+          <div class="memories-grid">
+            <figure class="photo-card memory-card memory-wide reveal parallax" data-speed="0.05">
+              <img src="assets/photo-memory-1.jpg" alt="Andrew and Evelyn walking together by the lakeside" />
+            </figure>
+            <figure class="photo-card memory-card reveal">
+              <img src="assets/photo-memory-2.jpg" alt="A soft monochrome portrait by the lake" />
+            </figure>
+            <figure class="photo-card memory-card reveal">
+              <img src="assets/photo-memory-3.jpg" alt="Andrew and Evelyn embracing by the water at night" />
+            </figure>
+            <figure class="photo-card memory-card memory-tall reveal parallax" data-speed="0.07">
+              <img src="assets/photo-memory-4.jpg" alt="Evening lights reflecting on calm lake water" />
+            </figure>
+            <figure class="photo-card memory-card reveal">
+              <img src="assets/photo-memory-5.jpg" alt="Andrew and Evelyn standing together on the snowy dock" />
+            </figure>
+            <figure class="photo-card memory-card reveal">
+              <img src="assets/photo-memory-6.jpg" alt="A black and white portrait of Andrew and Evelyn hugging" />
+            </figure>
+            <figure class="photo-card memory-card reveal">
+              <img src="assets/photo-memory-7.jpg" alt="Andrew and Evelyn smiling together on the snowy pier" />
+            </figure>
+            <figure class="photo-card memory-card memory-wide reveal parallax" data-speed="0.06">
+              <img src="assets/photo-memory-8.jpg" alt="A distant romantic view of the couple by the lakeshore" />
+            </figure>
+            <figure class="photo-card memory-card reveal">
+              <img src="assets/photo-memory-9.jpg" alt="Andrew and Evelyn on the dock with calm blue water behind" />
+            </figure>
+          </div>
         </div>
       </section>
 
