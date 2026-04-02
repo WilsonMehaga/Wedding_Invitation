@@ -89,6 +89,7 @@ function setupHeroScrollMotion() {
 function setupRsvp() {
   if (rsvpForm === null || rsvpNote === null) return;
   const submitButton = rsvpForm.querySelector('button[type="submit"]');
+  const webhookUrl = (rsvpForm.dataset.webhookUrl || '').trim();
   let isSubmitting = false;
 
   rsvpForm.addEventListener('submit', async (event) => {
@@ -107,29 +108,31 @@ function setupRsvp() {
     const guests = (data.get('guests') || '1').toString().trim();
     const dietary = (data.get('dietary') || '').toString().trim();
     const message = (data.get('message') || '').toString().trim();
+    const payload = {
+      submittedAt: new Date().toISOString(),
+      name,
+      attendance,
+      guests: Number(guests) || 1,
+      dietary,
+      message
+    };
 
     try {
+      if (webhookUrl === '') {
+        throw new Error('Missing RSVP webhook URL.');
+      }
+
       isSubmitting = true;
       if (submitButton) {
         submitButton.disabled = true;
         submitButton.textContent = 'Sending...';
       }
 
-      const response = await fetch('/api/rsvp', {
+      await fetch(webhookUrl, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          attendance,
-          guests,
-          dietary,
-          message
-        })
+        mode: 'no-cors',
+        body: JSON.stringify(payload)
       });
-
-      if (response.ok === false) {
-        throw new Error('Failed to submit RSVP');
-      }
 
       if (attendance === 'yes') {
         rsvpNote.textContent = 'Thank you, ' + name + '. We look forward to celebrating with you in Sydney.';

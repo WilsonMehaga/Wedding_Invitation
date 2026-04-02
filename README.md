@@ -11,6 +11,13 @@ npm start
 
 Open: `http://localhost:3000`
 
+## Netlify deployment
+
+For Netlify static hosting, RSVP submission is configured to post directly from the browser to Google Apps Script webhook via the `data-webhook-url` on the RSVP form in `index.html`.
+
+- No Node server is required on Netlify for RSVP saving.
+- If you rotate webhook URL, update `data-webhook-url` in `index.html`.
+
 ## Where RSVP data goes
 
 - Excel file path: `data/rsvp-data.xlsx`
