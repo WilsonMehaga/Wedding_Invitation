@@ -457,7 +457,26 @@ function setupRsvp() {
         const errorMessage =
           (responseData && responseData.error) ||
           'Sorry, we could not save your RSVP right now. Please try again.';
-        throw new Error(errorMessage);
+        const shouldFallbackToDirectWebhook =
+          !!directGoogleWebhookUrl &&
+          /missing\s+google_sheets_webhook_url|missing webhook|webhook/i.test(errorMessage);
+
+        if (shouldFallbackToDirectWebhook) {
+          await fetch(directGoogleWebhookUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify(payload)
+          });
+
+          response = {
+            ok: true,
+            status: 200,
+            json: async () => ({ ok: true, cloudEnabled: true, viaDirectWebhook: true })
+          };
+          responseData = await response.json();
+        } else {
+          throw new Error(errorMessage);
+        }
       }
 
       if (responseData && responseData.cloudEnabled === false) {

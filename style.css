@@ -35,6 +35,12 @@ body.opener-locked {
   overflow: hidden;
 }
 
+body.opener-locked header,
+body.opener-locked main,
+body.opener-locked footer {
+  visibility: hidden;
+}
+
 .video-opener {
   position: fixed;
   inset: 0;
