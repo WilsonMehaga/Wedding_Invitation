@@ -481,18 +481,40 @@ function setupVideoOpener() {
   if (videoOpener === null) return;
 
   const openerInstruction = videoOpener.querySelector('.video-opener-instruction');
-  document.body.classList.add('opener-locked');
-
-  if (openerVideo) {
-    openerVideo.muted = true;
-    openerVideo.defaultMuted = true;
-    openerVideo.volume = 0;
-    openerVideo.playsInline = true;
-  }
 
   let hasStarted = false;
   let isTransitioning = false;
   let hasNearEndTransitionTriggered = false;
+
+  const resetToBeginning = () => {
+    // Always restart from the invitation opener state when page is opened/restored.
+    hasStarted = false;
+    isTransitioning = false;
+    hasNearEndTransitionTriggered = false;
+
+    videoOpener.classList.remove('is-playing', 'is-transitioning', 'is-hidden');
+    videoOpener.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('opener-locked');
+
+    if (history.scrollRestoration) {
+      history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
+    if (openerVideo) {
+      openerVideo.pause();
+      openerVideo.currentTime = 0;
+      openerVideo.muted = true;
+      openerVideo.defaultMuted = true;
+      openerVideo.volume = 0;
+      openerVideo.playsInline = true;
+    }
+
+    if (bgMusic) {
+      bgMusic.pause();
+      bgMusic.currentTime = 0;
+    }
+  };
 
   const finishTransition = async () => {
     if (videoOpener.classList.contains('is-hidden') || isTransitioning) return;
@@ -568,6 +590,9 @@ function setupVideoOpener() {
       document.body.classList.remove('opener-locked');
     }, 0);
   }
+
+  resetToBeginning();
+  window.addEventListener('pageshow', resetToBeginning);
 }
 
 setupReveal();
